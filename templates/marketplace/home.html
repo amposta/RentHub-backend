@@ -1,0 +1,523 @@
+{% extends 'base.html' %}
+
+{% block title %}RentHub - Rent Anything, Save More{% endblock %}
+
+{% block content %}
+<style>
+    .hero-carousel {
+        background: linear-gradient(135deg, rgba(255, 107, 53, 0.08) 0%, rgba(255, 171, 102, 0.05) 100%);
+        border-radius: 20px;
+        padding: 1.5rem;
+        margin: 0.75rem auto;
+        position: relative;
+        overflow: hidden;
+        min-height: 260px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .hero-content {
+        flex: 1;
+        z-index: 10;
+        max-width: 50%;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.75rem;
+        font-weight: 700;
+        color: #1F2937;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+    }
+    
+    .hero-content p {
+        font-size: 1.1rem;
+        color: #6B7280;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+    
+    .hero-button {
+        background-color: #FF6B35;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .hero-button:hover {
+        background-color: #E55A2B;
+        transform: translateY(-2px);
+        color: white;
+        text-decoration: none;
+    }
+    
+    .hero-image {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 45%;
+        background: linear-gradient(180deg, rgba(255,255,255,0.15), rgba(255,255,255,0.5)), url('https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=900&q=80') no-repeat center;
+        background-size: cover;
+        border-radius: 0 20px 20px 0;
+    }
+    
+    .carousel-control {
+        position: absolute;
+        bottom: 2rem;
+        left: 2rem;
+        display: flex;
+        gap: 1rem;
+        z-index: 15;
+    }
+    
+    .carousel-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: #FF6B35;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        opacity: 0.5;
+    }
+    
+    .carousel-dot.active {
+        opacity: 1;
+        width: 32px;
+        border-radius: 6px;
+    }
+    
+    /* Category Section */
+    .category-section {
+        margin: 1.5rem 1rem;
+    }
+    
+    .category-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding: 0 0.5rem;
+    }
+    
+    .category-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1F2937;
+    }
+    
+    .category-scroll {
+        display: flex;
+        gap: 0.75rem;
+        overflow-x: auto;
+        padding-bottom: 0.75rem;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .category-scroll::-webkit-scrollbar {
+        height: 6px;
+    }
+    
+    .category-scroll::-webkit-scrollbar-track {
+        background: #F3F4F6;
+    }
+    
+    .category-scroll::-webkit-scrollbar-thumb {
+        background: #FF6B35;
+        border-radius: 3px;
+    }
+    
+    .category-pill {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        color: #1F2937;
+        flex-shrink: 0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .category-pill:hover {
+        transform: translateY(-8px);
+    }
+    
+    .category-icon {
+        width: 64px;
+        height: 64px;
+        background-color: #FF6B35;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        color: white;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
+    }
+    
+    .category-pill:hover .category-icon {
+        background-color: #E55A2B;
+        transform: scale(1.1);
+        box-shadow: 0 8px 16px rgba(255, 107, 53, 0.3);
+    }
+    
+    .category-name {
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-align: center;
+        max-width: 70px;
+    }
+    
+    /* Rental Cards */
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 1.25rem 1rem 0.75rem;
+        padding: 0 0.5rem;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1F2937;
+    }
+    
+    .view-all {
+        color: #FF6B35;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .view-all:hover {
+        color: #E55A2B;
+    }
+    
+    .rental-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 1rem;
+        padding: 0;
+        max-width: 1220px;
+    }
+    
+    .rental-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+    
+    .rental-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+        text-decoration: none;
+        color: inherit;
+    }
+    
+    .rental-image-container {
+        position: relative;
+        overflow: hidden;
+        background-color: #E5E7EB;
+        aspect-ratio: 1;
+    }
+    
+    .rental-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .rental-card:hover .rental-image {
+        transform: scale(1.05);
+    }
+    
+    .wishlist-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+    }
+    
+    .wishlist-btn:hover {
+        background: #FF6B35;
+        color: white;
+    }
+    
+    .wishlist-btn.active {
+        background: #FF6B35;
+        color: white;
+    }
+    
+    .rental-info {
+        padding: 1rem;
+    }
+    
+    .rental-title {
+        font-weight: 600;
+        color: #1F2937;
+        margin-bottom: 0.5rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 2.6rem;
+        line-height: 1.3;
+    }
+    
+    .rental-price {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #FF6B35;
+        margin-bottom: 0.5rem;
+    }
+    
+    .rental-location {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6B7280;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .rental-rating {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6B7280;
+        font-size: 0.875rem;
+    }
+    
+    .star {
+        color: #FF6B35;
+    }
+    
+    /* Horizontal Scroll Grid */
+    .horizontal-scroll-grid {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        padding: 1rem 1rem;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .horizontal-scroll-grid::-webkit-scrollbar {
+        height: 6px;
+    }
+    
+    .horizontal-scroll-grid::-webkit-scrollbar-track {
+        background: #F3F4F6;
+    }
+    
+    .horizontal-scroll-grid::-webkit-scrollbar-thumb {
+        background: #FF6B35;
+        border-radius: 3px;
+    }
+    
+    .rental-card-compact {
+        flex-shrink: 0;
+        width: 160px;
+    }
+    
+    @media (max-width: 768px) {
+        .hero-carousel {
+            padding: 1.5rem 1rem;
+            min-height: 250px;
+        }
+        
+        .hero-content {
+            max-width: 100%;
+        }
+        
+        .hero-content h1 {
+            font-size: 1.75rem;
+        }
+        
+        .hero-image {
+            width: 50%;
+            opacity: 0.3;
+        }
+        
+        .rental-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 0.5rem;
+        }
+    }
+</style>
+
+<!-- Hero Carousel -->
+<div class="hero-carousel">
+    <div class="hero-content">
+        <h1>Rent More, Pay Less.</h1>
+        <p>Rent what you need. Save more. From everyday items to big adventures.</p>
+        <a href="{% url 'marketplace:explore' %}" class="hero-button">Explore Now</a>
+    </div>
+    <div class="hero-image"></div>
+    <div class="carousel-control">
+        <div class="carousel-dot active" onclick="changeSlide(0)"></div>
+        <div class="carousel-dot" onclick="changeSlide(1)"></div>
+    </div>
+</div>
+
+<!-- Categories Section -->
+<div class="category-section">
+    <div class="category-header">
+        <h2 class="category-title">Browse Categories</h2>
+        <a href="{% url 'marketplace:explore' %}" class="view-all">View all <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i></a>
+    </div>
+    <div class="category-scroll">
+        {% for category in categories %}
+            <a href="{% url 'marketplace:explore' %}?category={{ category.slug }}" class="category-pill">
+                <div class="category-icon">
+                    <i class="{{ category.icon }}"></i>
+                </div>
+                <span class="category-name">{{ category.name }}</span>
+            </a>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Trending Rentals Section -->
+<div class="section-header">
+    <h2 class="section-title">Trending Rentals</h2>
+    <a href="{% url 'marketplace:explore' %}" class="view-all">View all <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i></a>
+</div>
+
+<div class="rental-grid">
+    {% for item in trending_rentals %}
+        <a href="{% url 'marketplace:listing_detail' item.id %}" class="rental-card">
+            <div class="rental-image-container">
+                {% if item.image1 %}
+                    <img src="{{ item.image1.url }}" alt="{{ item.title }}" class="rental-image">
+                {% else %}
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #FF6B35 0%, #FFA366 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+                        <i class="fas fa-image"></i>
+                    </div>
+                {% endif %}
+                <button type="button" class="wishlist-btn {% if item in user_wishlist %}active{% endif %}" onclick="toggleWishlist(event, {{ item.id }})">
+                    <i class="fas fa-heart"></i>
+                </button>
+            </div>
+            <div class="rental-info">
+                <h3 class="rental-title">{{ item.title }}</h3>
+                <div class="rental-price">${{ item.price_per_day|floatformat:0 }} / day</div>
+                <div class="rental-location">
+                    <i class="fas fa-map-pin"></i>
+                    <span>{{ item.city|default:'Manila' }}</span>
+                </div>
+                <div class="rental-rating">
+                    <i class="fas fa-star star"></i>
+                    <span>{{ item.average_rating|floatformat:1 }} ({{ item.total_bookings }})</span>
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+</div>
+
+<!-- Near You Section -->
+<div class="section-header">
+    <h2 class="section-title">Near You</h2>
+    <a href="{% url 'marketplace:explore' %}" class="view-all">View all <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i></a>
+</div>
+
+<div class="horizontal-scroll-grid">
+    {% for item in near_you %}
+        <a href="{% url 'marketplace:listing_detail' item.id %}" class="rental-card rental-card-compact">
+            <div class="rental-image-container">
+                {% if item.image1 %}
+                    <img src="{{ item.image1.url }}" alt="{{ item.title }}" class="rental-image">
+                {% else %}
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #FF6B35 0%, #FFA366 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                        <i class="fas fa-image"></i>
+                    </div>
+                {% endif %}
+                <button type="button" class="wishlist-btn {% if item in user_wishlist %}active{% endif %}" onclick="toggleWishlist(event, {{ item.id }})">
+                    <i class="fas fa-heart"></i>
+                </button>
+            </div>
+            <div class="rental-info">
+                <h4 style="font-weight: 600; font-size: 0.875rem; margin-bottom: 0.25rem;">{{ item.title|truncatewords:3 }}</h4>
+                <div class="rental-price" style="font-size: 1rem; margin-bottom: 0.25rem;">${{ item.price_per_day|floatformat:0 }}</div>
+                <div class="rental-rating" style="font-size: 0.75rem;">
+                    <i class="fas fa-star star" style="font-size: 0.75rem;"></i>
+                    <span>{{ item.average_rating|floatformat:1 }}</span>
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+</div>
+
+<script>
+function toggleWishlist(event, itemId) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    fetch(`/wishlist/${itemId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const btn = event.target.closest('.wishlist-btn');
+        if (data.status === 'added') {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function changeSlide(index) {
+    // Carousel functionality
+    console.log('Changing to slide', index);
+}
+</script>
+{% endblock %}

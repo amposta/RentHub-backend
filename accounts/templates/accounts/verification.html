@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Account Verification - RentHub{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-20 flex items-center justify-center bg-gradient-to-br from-orange-50 to-blue-50">
+    <div class="max-w-2xl w-full mx-4">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <div class="w-24 h-24 bg-gradient-to-r from-orange-500 to-orange-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl">
+                <i class="fas fa-id-card text-3xl text-white"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Complete Your Verification</h1>
+            <p class="text-xl text-gray-600 mb-8 max-w-lg mx-auto">
+                Verify your identity to unlock unlimited rentals and build trust with hosts.
+            </p>
+            <div class="inline-flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold">
+                <i class="fas fa-lock mr-1"></i>Secure & Private
+            </div>
+        </div>
+
+        <!-- Verification Steps -->
+        <div class="grid md:grid-cols-2 gap-8 mb-12">
+            <!-- Step 1: ID Upload -->
+            <div class="relative group">
+                <div class="bg-white rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-dashed border-gray-200 hover:border-orange-400 hover:bg-orange-50">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-200 transition-colors">
+                            <i class="fas fa-id-card text-2xl text-orange-600"></i>
+                        </div>
+                        <h3 class="font-bold text-xl text-gray-900 mb-2">1. Government ID</h3>
+                        <p class="text-gray-600">Valid ID (Passport, Driver\'s License, SSS/UMID)</p>
+                    </div>
+                    <div class="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center hover:border-orange-400 transition-colors">
+                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                        <p class="text-gray-600 mb-2">Click to upload or drag & drop</p>
+                        <p class="text-xs text-gray-500">PNG, JPG up to 10MB</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Selfie -->
+            <div class="relative group">
+                <div class="bg-white rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-dashed border-gray-200 hover:border-orange-400 hover:bg-orange-50">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-green-200 transition-colors">
+                            <i class="fas fa-camera text-2xl text-green-600"></i>
+                        </div>
+                        <h3 class="font-bold text-xl text-gray-900 mb-2">2. Selfie with ID</h3>
+                        <p class="text-gray-600">Hold your ID clearly visible</p>
+                    </div>
+                    <div class="relative border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center hover:border-green-400 transition-colors overflow-hidden">
+                        <video class="w-full h-48 object-cover rounded-xl mb-4 bg-gray-200 skeleton"></video>
+                        <i class="fas fa-video text-4xl text-gray-400 mb-4"></i>
+                        <p class="text-gray-600 mb-2">Use camera or upload photo</p>
+                        <p class="text-xs text-gray-500">Face clearly visible with ID</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personal Info -->
+        <div class="bg-white rounded-3xl p-8 shadow-xl mb-8">
+            <h3 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                <i class="fas fa-user text-orange-500 mr-3"></i>Personal Information
+            </h3>
+            <form class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">Full Name (as in ID)</label>
+                    <input type="text" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all" placeholder="Juan Dela Cruz">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">Date of Birth</label>
+                    <input type="date" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">Complete Address</label>
+                    <textarea rows="3" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all resize-vertical" placeholder="123 Sample St, Barangay Sample, City, Province"></textarea>
+                </div>
+            </form>
+        </div>
+
+        <!-- Verification Status Mock -->
+        <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-8 rounded-3xl text-center shadow-2xl">
+            <div class="flex items-center justify-center w-20 h-20 bg-white/20 rounded-2xl mx-auto mb-6">
+                <i class="fas fa-shield-check text-3xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-3">Verification Status</h3>
+            <div class="inline-flex items-center bg-white/20 backdrop-blur-sm px-6 py-3 rounded-2xl font-semibold">
+                <span class="w-3 h-3 bg-green-400 rounded-full mr-2"></span>
+                Pending Review (24-48 hours)
+            </div>
+            <p class="mt-4 opacity-90 text-sm">You'll receive email notification once approved</p>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row gap-4 mt-12 pt-8 border-t border-gray-200">
+            <button class="flex-1 btn-primary text-lg py-4">
+                <i class="fas fa-paper-plane mr-2"></i>Submit for Verification
+            </button>
+            <button class="flex-1 btn-secondary text-lg py-4">
+                <i class="fas fa-edit mr-2"></i>Edit Information
+            </button>
+        </div>
+
+        <!-- Trust Indicators -->
+        <div class="mt-12 pt-8 border-t border-gray-200 text-center">
+            <p class="text-sm text-gray-600 mb-4">
+                🔒 Your data is encrypted and secure | 
+                🇵🇭 Complies with Data Privacy Act | 
+                ✅ AI-powered facial recognition
+            </p>
+            <div class="flex justify-center items-center space-x-8 text-sm text-gray-500">
+                <div class="flex items-center">
+                    <i class="fas fa-lock text-orange-500 mr-2"></i>
+                    <span>Bank-level security</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                    <span>99.9% approval rate</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

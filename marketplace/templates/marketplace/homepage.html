@@ -1,0 +1,342 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen bg-white pb-20">
+  <!-- Mobile Header -->
+  <div class="sticky top-0 z-40 bg-white border-b border-gray-200">
+    <div class="p-4 flex items-center justify-between">
+      <h1 class="text-2xl font-bold"><span class="text-gray-900">Rent</span><span class="text-orange-500 font-extrabold">Hub</span></h1>
+      <div class="relative">
+        <button class="p-2 hover:bg-gray-100 rounded-full relative">
+          <i class="fas fa-bell text-gray-600"></i>
+          <span class="absolute top-1 right-1 w-5 h-5 bg-orange-500 text-white text-xs rounded-full flex items-center justify-center">2</span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Search Bar -->
+    <div class="px-4 pb-4">
+      <div class="flex items-center bg-gray-100 rounded-xl px-3 py-2">
+        <i class="fas fa-search text-gray-400 mr-2"></i>
+        <input type="text" placeholder="Search for cars, cameras..." class="flex-1 bg-transparent outline-none text-sm text-gray-700">
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Banner -->
+  <div class="px-4 py-6">
+    <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-3xl p-6 relative overflow-hidden">
+      <div class="absolute right-0 top-0 opacity-30">
+        <i class="fas fa-shopping-cart text-orange-200 text-9xl"></i>
+      </div>
+      <div class="relative z-10">
+        <p class="text-orange-600 text-xs font-bold uppercase tracking-wider">RENT ANYTHING</p>
+        <h2 class="text-3xl font-bold text-gray-900 mt-2 mb-2">Rent More,<br>Pay Less.</h2>
+        <p class="text-gray-600 text-sm mb-4">Choose what you need.<br>Rent. Use. Return.</p>
+        <button class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-xl text-sm">
+          Explore Now
+        </button>
+      </div>
+      
+      <!-- Carousel Indicators -->
+      <div class="flex gap-2 mt-4 justify-center">
+        <div class="w-2 h-2 bg-orange-500 rounded-full"></div>
+        <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
+        <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories Grid -->
+  <div class="px-4 py-6">
+    <div class="grid grid-cols-2 gap-4 mb-8">
+      <!-- Cars -->
+      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition">
+        <img src="/static/images/car.jpg" alt="Cars" class="w-full h-32 object-cover rounded-lg mb-3">
+        <h3 class="font-bold text-gray-900">Cars</h3>
+        <p class="text-xs text-gray-500">Drive your way</p>
+      </div>
+      
+      <!-- Cameras -->
+      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition">
+        <img src="/static/images/camera.jpg" alt="Cameras" class="w-full h-32 object-cover rounded-lg mb-3">
+        <h3 class="font-bold text-gray-900">Cameras</h3>
+        <p class="text-xs text-gray-500">Capture moments</p>
+      </div>
+
+      <!-- Appliances -->
+      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition">
+        <img src="/static/images/appliance.jpg" alt="Appliances" class="w-full h-32 object-cover rounded-lg mb-3">
+        <h3 class="font-bold text-gray-900">Appliances</h3>
+        <p class="text-xs text-gray-500">Make life easy</p>
+      </div>
+
+      <!-- Sports Gear -->
+      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition">
+        <img src="/static/images/sports.jpg" alt="Sports" class="w-full h-32 object-cover rounded-lg mb-3">
+        <h3 class="font-bold text-gray-900">Sports Gear</h3>
+        <p class="text-xs text-gray-500">Play your best</p>
+      </div>
+
+      <!-- Tools -->
+      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition">
+        <img src="/static/images/tools.jpg" alt="Tools" class="w-full h-32 object-cover rounded-lg mb-3">
+        <h3 class="font-bold text-gray-900">Tools</h3>
+        <p class="text-xs text-gray-500">Get the job done</p>
+      </div>
+
+      <!-- Fashion -->
+      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition">
+        <img src="/static/images/fashion.jpg" alt="Fashion" class="w-full h-32 object-cover rounded-lg mb-3">
+        <h3 class="font-bold text-gray-900">Fashion</h3>
+        <p class="text-xs text-gray-500">Look your best</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trending Now Section -->
+  <div class="px-4 py-6">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold text-gray-900">Trending Now</h2>
+      <a href="{% url 'explore' %}" class="text-orange-500 text-sm font-semibold flex items-center">
+        See all <i class="fas fa-chevron-right ml-1 text-xs"></i>
+      </a>
+    </div>
+
+    <!-- Trending Items Grid -->
+    <div class="grid grid-cols-2 gap-4">
+      <!-- Item 1 -->
+      <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition">
+        <div class="relative">
+          <img src="/static/images/bmw.jpg" alt="BMW" class="w-full h-40 object-cover">
+          <button class="absolute top-3 right-3 bg-white rounded-full p-2 hover:bg-gray-100">
+            <i class="fas fa-heart text-gray-400"></i>
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="font-bold text-gray-900 text-sm">BMW 3 Series</h3>
+          <p class="text-xs text-gray-500 flex items-center">
+            <i class="fas fa-map-marker-alt text-orange-500 mr-1"></i> Manila, PH
+          </p>
+          <div class="flex justify-between items-center mt-2">
+            <p class="font-bold text-orange-500">₱3,500 <span class="text-xs">/day</span></p>
+            <span class="text-xs text-yellow-500 flex items-center">
+              <i class="fas fa-star"></i> 4.8 <span class="text-gray-500 text-xs">(32)</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition">
+        <div class="relative">
+          <img src="/static/images/canon.jpg" alt="Canon" class="w-full h-40 object-cover">
+          <button class="absolute top-3 right-3 bg-white rounded-full p-2 hover:bg-gray-100">
+            <i class="fas fa-heart text-gray-400"></i>
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="font-bold text-gray-900 text-sm">Canon EOS R6</h3>
+          <p class="text-xs text-gray-500 flex items-center">
+            <i class="fas fa-map-marker-alt text-orange-500 mr-1"></i> Manila, PH
+          </p>
+          <div class="flex justify-between items-center mt-2">
+            <p class="font-bold text-orange-500">₱1,200 <span class="text-xs">/day</span></p>
+            <span class="text-xs text-yellow-500 flex items-center">
+              <i class="fas fa-star"></i> 4.9 <span class="text-gray-500 text-xs">(18)</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition">
+        <div class="relative">
+          <img src="/static/images/tent.jpg" alt="Tent" class="w-full h-40 object-cover">
+          <button class="absolute top-3 right-3 bg-white rounded-full p-2 hover:bg-gray-100">
+            <i class="fas fa-heart text-gray-400"></i>
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="font-bold text-gray-900 text-sm">Camping Tent</h3>
+          <p class="text-xs text-gray-500 flex items-center">
+            <i class="fas fa-map-marker-alt text-orange-500 mr-1"></i> Quezon City, PH
+          </p>
+          <div class="flex justify-between items-center mt-2">
+            <p class="font-bold text-orange-500">₱350 <span class="text-xs">/day</span></p>
+            <span class="text-xs text-yellow-500 flex items-center">
+              <i class="fas fa-star"></i> 4.7 <span class="text-gray-500 text-xs">(11)</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 4 -->
+      <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition">
+        <div class="relative">
+          <img src="/static/images/drill.jpg" alt="Drill" class="w-full h-40 object-cover">
+          <button class="absolute top-3 right-3 bg-white rounded-full p-2 hover:bg-gray-100">
+            <i class="fas fa-heart text-gray-400"></i>
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="font-bold text-gray-900 text-sm">Bosch Drill GSR</h3>
+          <p class="text-xs text-gray-500 flex items-center">
+            <i class="fas fa-map-marker-alt text-orange-500 mr-1"></i> Quezon City, PH
+          </p>
+          <div class="flex justify-between items-center mt-2">
+            <p class="font-bold text-orange-500">₱450 <span class="text-xs">/day</span></p>
+            <span class="text-xs text-yellow-500 flex items-center">
+              <i class="fas fa-star"></i> 4.6 <span class="text-gray-500 text-xs">(9)</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Navigation Bar -->
+<div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+  <div class="flex justify-between items-center px-4 py-3 max-w-md mx-auto">
+    <!-- Home -->
+    <a href="{% url 'homepage' %}" class="flex flex-col items-center py-2 text-orange-500">
+      <i class="fas fa-home text-2xl"></i>
+      <span class="text-xs mt-1">Home</span>
+    </a>
+
+    <!-- Chat -->
+    <a href="#" class="flex flex-col items-center py-2 text-gray-500 hover:text-gray-700">
+      <i class="fas fa-comments text-2xl"></i>
+      <span class="text-xs mt-1">Chat</span>
+    </a>
+
+    <!-- Post (Center Button) -->
+    <button class="flex flex-col items-center py-2 text-orange-500 transform -translate-y-3">
+      <div class="bg-orange-500 text-white rounded-full p-4 shadow-lg">
+        <i class="fas fa-plus text-2xl"></i>
+      </div>
+      <span class="text-xs mt-1">POST</span>
+    </button>
+
+    <!-- Drop-off -->
+    <a href="#" class="flex flex-col items-center py-2 text-gray-500 hover:text-gray-700">
+      <i class="fas fa-shopping-bag text-2xl"></i>
+      <span class="text-xs mt-1">Drop-off</span>
+    </a>
+
+    <!-- Profile -->
+    <a href="#" class="flex flex-col items-center py-2 text-gray-500 hover:text-gray-700">
+      <i class="fas fa-user text-2xl"></i>
+      <span class="text-xs mt-1">Profile</span>
+    </a>
+  </div>
+</div>
+
+<!-- Old Hero Section (Commented) -->
+<!-- Hero Section -->
+<section class="relative pt-20 pb-24 overflow-hidden hidden">
+    <div class="container mx-auto px-6">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div class="lg:pr-12">
+                <div class="inline-block bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+                    🚀 Launching Soon - Early Access
+                </div>
+                <h1 class="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-6 leading-tight">
+                    Find Your Perfect
+                    <span class="block bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 text-transparent bg-clip-text mt-4">Rental Home</span>
+                </h1>
+                <p class="text-xl text-gray-600 mb-8 leading-relaxed max-w-lg">
+                    Discover verified rentals with secure bookings. Rent apartments, houses, rooms with confidence.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="{% url 'explore' %}" class="btn-primary text-lg py-4 px-8">
+                        <i class="fas fa-search mr-2"></i>Explore Rentals
+                    </a>
+                    <a href="#" onclick="document.getElementById('floatingAuth').click()" class="btn-secondary text-lg py-4 px-8">
+                        <i class="fas fa-user-plus mr-2"></i>List Your Space
+                    </a>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="bg-gradient-to-br from-orange-500/10 to-blue-500/10 rounded-3xl p-8">
+                    <img src="{% static 'images/hero-mockup.png' %}" alt="Rental Hero" class="w-full rounded-2xl shadow-2xl">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories -->
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Popular Categories</h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">Find rentals that match your lifestyle</p>
+        </div>
+        <div class="grid md:grid-cols-4 gap-6">
+            {% for category in categories %}
+            <a href="#" class="group relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8 text-center hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border hover:border-orange-200">
+                <div class="text-4xl mb-4">{{ category.icon }}</div>
+                <h3 class="font-bold text-xl text-gray-900 mb-2 group-hover:text-orange-600 transition-colors">{{ category.name }}</h3>
+                <p class="text-orange-600 font-semibold">{{ category.count }} listings</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Rentals -->
+<section class="py-20 bg-gray-50">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Featured Rentals</h2>
+            <p class="text-xl text-gray-600">Handpicked properties for you</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+            {% for rental in featured_rentals %}
+            <div class="rental-card group">
+                <div class="relative overflow-hidden">
+                    <img src="{% static rental.image %}" alt="{{ rental.title }}" class="w-full h-60 object-cover">
+                    <div class="rental-badge">Featured</div>
+                    <button class="heart-btn absolute top-4 left-4 p-2 bg-white/90 hover:bg-white rounded-full shadow-lg transition-all heart-btn text-gray-400 hover:text-red-500 hover:scale-110">
+                        <i class="fas fa-heart far"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <h3 class="font-bold text-xl mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors">{{ rental.title }}</h3>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center text-yellow-400">
+                            {% for i in "12345"|make_list %}
+                                <i class="fas fa-star text-sm {% if forloop.counter <= rental.rating %}text-yellow-400{% else %}text-gray-300{% endif %}"></i>
+                            {% endfor %}
+                            <span class="ml-1 text-sm font-semibold text-gray-700">{{ rental.rating }}</span>
+                        </div>
+                        <span class="text-2xl font-bold text-orange-600">₱{{ rental.price }}/day</span>
+                    </div>
+                    <p class="text-gray-600 mb-4 line-clamp-1">{{ rental.location }}</p>
+                    <a href="{% url 'listing_detail' rental.id %}" class="w-full block text-center btn-primary py-3">
+                        View Details
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+    <div class="container mx-auto px-6 text-center">
+        <h2 class="text-4xl lg:text-5xl font-bold mb-6">Ready to start renting?</h2>
+        <p class="text-xl mb-8 opacity-90 max-w-2xl mx-auto">Join thousands of renters finding their perfect home today.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a href="#" onclick="document.getElementById('floatingAuth').click()" class="btn-primary text-lg py-4 px-8 bg-white text-orange-600 hover:bg-gray-100">
+                <i class="fas fa-user-plus mr-2"></i>Get Started
+            </a>
+            <a href="{% url 'explore' %}" class="font-semibold hover:underline">Browse Rentals →</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
