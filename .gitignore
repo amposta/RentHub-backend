@@ -1,0 +1,16 @@
+﻿# Python/Django
+*.py[cod]
+__pycache__/
+db.sqlite3
+logs/
+*.log
+.env
+*.env
+# Ignore local frontend repo when backend repository is separate
+frontend/
+
+# macOS / editor
+.DS_Store
+.vscode/
+package-lock.json
+py_errors.txt
