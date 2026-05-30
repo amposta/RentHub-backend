@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 from django.db.models import Q
 from .forms import CustomUserCreationForm, LoginForm, UserProfileForm, UserBasicInfoForm, VerificationUploadForm
 from .models import CustomUser, UserProfile, VerificationRequest
+from marketplace.models import RentalItem
 
 
 class SignUpView(CreateView):
@@ -53,7 +54,7 @@ def login_view(request):
                     messages.success(request, f'Welcome back, {user.first_name}!')
                     
                     # Redirect to next page if provided
-                    next_page = request.GET.get('next', 'marketplace:home')
+                    next_page = request.POST.get('next') or request.GET.get('next') or 'marketplace:home'
                     return redirect(next_page)
                 else:
                     messages.error(request, 'Invalid email or password')
@@ -79,9 +80,7 @@ def logout_view(request):
 
 @login_required(login_url='accounts:login')
 def profile_view(request):
-    """User profile view - shows all profile information"""
     profile = get_object_or_404(UserProfile, user=request.user)
-    
     context = {
         'profile': profile,
         'page_title': 'My Profile',

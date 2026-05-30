@@ -5,6 +5,7 @@ from .models import CustomUser, UserProfile, VerificationRequest
 
 @admin.register(CustomUser)
 class CustomUserAdmin(BaseUserAdmin):
+    readonly_fields = ('last_login', 'date_joined', 'updated_at')
     list_display = ('email', 'first_name', 'last_name', 'is_verified', 'overall_rating', 'date_joined')
     list_filter = ('is_verified', 'is_staff', 'date_joined')
     search_fields = ('email', 'first_name', 'last_name')

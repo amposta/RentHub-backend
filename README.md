@@ -14,10 +14,23 @@ A production-ready frontend-first rental marketplace built with Django, inspired
 
 ## Quick Start
 
+The repository now uses a separate React + Tailwind frontend and a Django backend API.
+
 ```bash
-# Clone & Setup
+# Clone & setup Python backend
 git clone <repo>
-cd renthub
-pip install django
-python manage.py collectstatic
+cd RentHub
+python -m pip install -r requirements.txt
+python manage.py migrate
 python manage.py runserver
+```
+
+In a second terminal, start the frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open the frontend at `http://localhost:3000` and the backend API at `http://localhost:8000/api/`.

@@ -21,14 +21,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'whitenoise.runserver_nostatic',
 
-    'tailwind',
-    'theme',
     # Third-party apps
     'crispy_forms',
     'crispy_bootstrap5',
     'django_filters',
     'rest_framework',
     'corsheaders',
+    'api',
     
     # Local apps
     'accounts',
@@ -39,8 +38,6 @@ INSTALLED_APPS = [
     'verification',
     'dashboard',
 ]
-
-TAILWIND_APP_NAME = 'theme'
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -108,7 +105,6 @@ TEMPLATES = [
 
 # Static & Media Files
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -149,7 +145,10 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',   # ✅ Full URL with scheme
     'http://127.0.0.1:3000',  # ✅
     'https://localhost:3000',  # ✅ If using HTTPS
+    'http://localhost:5173',   # ✅ Vite frontend dev server
+    'http://127.0.0.1:5173',  # ✅ Vite frontend dev server
 ]
+CORS_ALLOW_CREDENTIALS = True
 # Crispy Forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
@@ -159,6 +158,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
+    'PAGE_SIZE_QUERY_PARAM': 'page_size',
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
     ],

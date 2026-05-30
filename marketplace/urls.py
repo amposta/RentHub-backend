@@ -12,6 +12,7 @@ urlpatterns = [
     # Wishlist
     path('item/<uuid:item_id>/wishlist/', views.toggle_wishlist, name='toggle_wishlist'),
     path('wishlist/', views.wishlist_view, name='wishlist'),
+    path('dropoff/', views.dropoff_view, name='dropoff'),
     
     # User's listings
     path('listings/', views.RentalItemListView.as_view(), name='my_listings'),

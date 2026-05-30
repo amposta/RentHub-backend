@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.db.models import Q, Avg
-from django_filters.rest_framework import DjangoFilterBackend
+from django.utils.dateparse import parse_date
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
@@ -51,7 +51,7 @@ def homepage(request):
         'hero_slides': hero_slides,
         'page_title': 'RentHub - Rent Anything',
     }
-    return render(request, 'marketplace/home.html', context)
+    return render(request, 'marketplace/homepage.html', context)
 
 
 def explore(request):
@@ -113,11 +113,42 @@ def listing_detail(request, item_id):
     """Detailed view of a single rental item"""
     
     item = get_object_or_404(RentalItem, id=item_id)
+    errors = []
+    
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return redirect('accounts:login')
+
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        special_requests = request.POST.get('special_requests', '').strip()
+
+        if not start_date or not end_date:
+            errors.append('Please select both pickup and dropoff dates.')
+        else:
+            start_date_obj = parse_date(start_date)
+            end_date_obj = parse_date(end_date)
+            if not start_date_obj or not end_date_obj:
+                errors.append('One or more dates are invalid.')
+            elif start_date_obj > end_date_obj:
+                errors.append('Dropoff date must be after pickup date.')
+
+        if not errors:
+            Booking.objects.create(
+                renter=request.user,
+                item=item,
+                owner=item.owner,
+                start_date=start_date_obj,
+                end_date=end_date_obj,
+                special_requests=special_requests,
+            )
+            messages.success(request, 'Booking requested successfully. Check your Dropoff page for details.')
+            return redirect('marketplace:dropoff')
     
     # Get owner info
     owner = item.owner
     owner_ratings = owner.reviews_received.all()
-    avg_owner_rating = owner.overall_rating
+    avg_owner_rating = owner.overall_rating if hasattr(owner, 'overall_rating') else 0
     
     # Get images
     images = item.get_images()
@@ -145,6 +176,7 @@ def listing_detail(request, item_id):
         'reviews': reviews,
         'in_wishlist': in_wishlist,
         'related_items': related_items,
+        'errors': errors,
         'page_title': item.title,
     }
     
@@ -170,6 +202,8 @@ class RentalItemListView(LoginRequiredMixin, ListView):
 
 class RentalItemCreateView(LoginRequiredMixin, CreateView):
     """Create a new rental item"""
+    login_url = 'accounts:login'
+    redirect_field_name = 'next'
     model = RentalItem
     template_name = 'marketplace/item_form.html'
     fields = ['category', 'title', 'description', 'price_per_day', 'location', 'city', 'state', 
@@ -256,3 +290,14 @@ def wishlist_view(request):
         'page_title': 'My Wishlist',
     }
     return render(request, 'marketplace/wishlist.html', context)
+
+
+@login_required(login_url='accounts:login')
+def dropoff_view(request):
+    """Dropoff page showing current bookings and dropoff details."""
+    bookings = Booking.objects.filter(renter=request.user).order_by('-created_at')
+    context = {
+        'bookings': bookings,
+        'page_title': 'Dropoff',
+    }
+    return render(request, 'marketplace/dropoff.html', context)

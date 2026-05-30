@@ -2,6 +2,13 @@
 {% load static %}
 
 {% block content %}
+<style>
+  /* hide scrollbar helper */
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  /* small card sizing when in horizontal scroll */
+  .category-card-min { min-width: 180px; flex: 0 0 auto; }
+</style>
 <div class="min-h-screen bg-white pb-20">
   <!-- Mobile Header -->
   <div class="sticky top-0 z-40 bg-white border-b border-gray-200">
@@ -50,44 +57,44 @@
 
   <!-- Categories Grid -->
   <div class="px-4 py-6">
-    <div class="grid grid-cols-2 gap-4 mb-8">
+    <div class="flex gap-4 mb-8 overflow-x-auto hide-scrollbar" style="-webkit-overflow-scrolling:touch;">
       <!-- Cars -->
-      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition">
+      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition category-card-min">
         <img src="/static/images/car.jpg" alt="Cars" class="w-full h-32 object-cover rounded-lg mb-3">
         <h3 class="font-bold text-gray-900">Cars</h3>
         <p class="text-xs text-gray-500">Drive your way</p>
       </div>
       
       <!-- Cameras -->
-      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition">
+      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition category-card-min">
         <img src="/static/images/camera.jpg" alt="Cameras" class="w-full h-32 object-cover rounded-lg mb-3">
         <h3 class="font-bold text-gray-900">Cameras</h3>
         <p class="text-xs text-gray-500">Capture moments</p>
       </div>
 
       <!-- Appliances -->
-      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition">
+      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition category-card-min">
         <img src="/static/images/appliance.jpg" alt="Appliances" class="w-full h-32 object-cover rounded-lg mb-3">
         <h3 class="font-bold text-gray-900">Appliances</h3>
         <p class="text-xs text-gray-500">Make life easy</p>
       </div>
 
       <!-- Sports Gear -->
-      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition">
+      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition category-card-min">
         <img src="/static/images/sports.jpg" alt="Sports" class="w-full h-32 object-cover rounded-lg mb-3">
         <h3 class="font-bold text-gray-900">Sports Gear</h3>
         <p class="text-xs text-gray-500">Play your best</p>
       </div>
 
       <!-- Tools -->
-      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition">
+      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition category-card-min">
         <img src="/static/images/tools.jpg" alt="Tools" class="w-full h-32 object-cover rounded-lg mb-3">
         <h3 class="font-bold text-gray-900">Tools</h3>
         <p class="text-xs text-gray-500">Get the job done</p>
       </div>
 
       <!-- Fashion -->
-      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition">
+      <div class="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition category-card-min">
         <img src="/static/images/fashion.jpg" alt="Fashion" class="w-full h-32 object-cover rounded-lg mb-3">
         <h3 class="font-bold text-gray-900">Fashion</h3>
         <p class="text-xs text-gray-500">Look your best</p>
@@ -99,7 +106,7 @@
   <div class="px-4 py-6">
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-xl font-bold text-gray-900">Trending Now</h2>
-      <a href="{% url 'explore' %}" class="text-orange-500 text-sm font-semibold flex items-center">
+      <a href="{% url 'marketplace:explore' %}" class="text-orange-500 text-sm font-semibold flex items-center">
         See all <i class="fas fa-chevron-right ml-1 text-xs"></i>
       </a>
     </div>
@@ -251,7 +258,7 @@
                     Discover verified rentals with secure bookings. Rent apartments, houses, rooms with confidence.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <a href="{% url 'explore' %}" class="btn-primary text-lg py-4 px-8">
+                    <a href="{% url 'marketplace:explore' %}" class="btn-primary text-lg py-4 px-8">
                         <i class="fas fa-search mr-2"></i>Explore Rentals
                     </a>
                     <a href="#" onclick="document.getElementById('floatingAuth').click()" class="btn-secondary text-lg py-4 px-8">
@@ -335,7 +342,7 @@
             <a href="#" onclick="document.getElementById('floatingAuth').click()" class="btn-primary text-lg py-4 px-8 bg-white text-orange-600 hover:bg-gray-100">
                 <i class="fas fa-user-plus mr-2"></i>Get Started
             </a>
-            <a href="{% url 'explore' %}" class="font-semibold hover:underline">Browse Rentals →</a>
+            <a href="{% url 'marketplace:explore' %}" class="font-semibold hover:underline">Browse Rentals →</a>
         </div>
     </div>
 </section>
