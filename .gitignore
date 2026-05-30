@@ -14,3 +14,7 @@ frontend/
 .vscode/
 package-lock.json
 py_errors.txt
+venv/
+
+.venv/
+
