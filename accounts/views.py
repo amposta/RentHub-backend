@@ -1,31 +1,60 @@
+from django.conf import settings
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.generic import CreateView, DetailView, UpdateView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.db.models import Q
 from .forms import CustomUserCreationForm, LoginForm, UserProfileForm, UserBasicInfoForm, VerificationUploadForm
-from .models import CustomUser, UserProfile, VerificationRequest
+from .models import CustomUser, UserProfile, VerificationRequest, EmailVerificationToken
 from marketplace.models import RentalItem
+
+
+def build_email_verification_link(request, token):
+    return request.build_absolute_uri(reverse('accounts:verify_email', args=[str(token.token)]))
+
+
+def send_verification_email(request, user):
+    token = EmailVerificationToken.objects.create(user=user)
+    verification_url = build_email_verification_link(request, token)
+    subject = 'Verify your RentHub email address'
+    message = (
+        f'Hi {user.first_name},\n\n'
+        f'Thanks for signing up for RentHub. Please verify your email by clicking the link below:\n\n'
+        f'{verification_url}\n\n'
+        'If you did not create an account, please ignore this email.\n\n'
+        'Thanks,\nRentHub Team'
+    )
+    send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        [user.email],
+        fail_silently=False,
+    )
 
 
 class SignUpView(CreateView):
     """User registration view"""
     form_class = CustomUserCreationForm
     template_name = 'accounts/signup.html'
-    success_url = reverse_lazy('marketplace:home')
+    success_url = reverse_lazy('accounts:login')
     
     def form_valid(self, form):
-        response = super().form_valid(form)
-        user = form.save()
-        # Create user profile
+        user = form.save(commit=False)
+        user.is_active = False
+        user.is_verified = False
+        user.save()
         UserProfile.objects.create(user=user)
-        # Log the user in
-        login(self.request, user)
-        messages.success(self.request, 'Account created successfully! Welcome to RentHub.')
-        return response
+        send_verification_email(self.request, user)
+        messages.success(
+            self.request,
+            'Account created successfully! Check your email for a verification link before logging in.'
+        )
+        return redirect(self.success_url)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -46,9 +75,15 @@ def login_view(request):
             
             # Find user by email
             try:
-                user = CustomUser.objects.get(email=email)
-                user = authenticate(request, username=user.username, password=password)
-                
+                candidate = CustomUser.objects.get(email=email)
+                if not candidate.is_active:
+                    messages.warning(
+                        request,
+                        'Please verify your email address before logging in. We have sent a confirmation link to your inbox.'
+                    )
+                    return redirect('accounts:login')
+
+                user = authenticate(request, username=candidate.username, password=password)
                 if user is not None:
                     login(request, user)
                     messages.success(request, f'Welcome back, {user.first_name}!')
@@ -68,6 +103,34 @@ def login_view(request):
         'page_title': 'Login',
     }
     return render(request, 'accounts/login.html', context)
+
+
+def verify_email(request, token):
+    """Verify email address using a token."""
+    try:
+        verification_token = EmailVerificationToken.objects.select_related('user').get(token=token)
+    except EmailVerificationToken.DoesNotExist:
+        messages.error(request, 'Invalid or expired verification link.')
+        return redirect('accounts:signup')
+
+    if verification_token.used or verification_token.is_expired():
+        messages.error(request, 'This verification link is no longer valid. Please sign up again or request a new link.')
+        return redirect('accounts:signup')
+
+    user = verification_token.user
+    user.is_active = True
+    user.is_verified = True
+    user.save()
+
+    if hasattr(user, 'profile'):
+        user.profile.email_verified = True
+        user.profile.save()
+
+    verification_token.used = True
+    verification_token.save()
+
+    messages.success(request, 'Email verified successfully! You can now log in.')
+    return redirect('accounts:login')
 
 
 @login_required(login_url='accounts:login')
@@ -184,6 +247,18 @@ def verification_upload_view(request):
         'trust_badges': request.user.trust_badges.all(),
     }
     return render(request, 'accounts/verification_upload.html', context)
+
+
+@login_required(login_url='accounts:login')
+def owner_onboarding_view(request):
+    """Show owner onboarding for payout setup."""
+    profile = get_object_or_404(UserProfile, user=request.user)
+    context = {
+        'profile': profile,
+        'page_title': 'Owner Onboarding',
+        'onboarding_required': True,
+    }
+    return render(request, 'accounts/verification.html', context)
 
 
 def public_profile_view(request, username):

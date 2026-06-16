@@ -6,6 +6,9 @@ User = get_user_model()
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
+    can_rent = serializers.ReadOnlyField()
+    can_list_items = serializers.ReadOnlyField()
+
     class Meta:
         model = User
         fields = [
@@ -16,6 +19,11 @@ class UserDetailSerializer(serializers.ModelSerializer):
             'last_name',
             'avatar',
             'is_verified',
+            'is_identity_verified',
+            'is_payout_connected',
+            'stripe_account_id',
+            'can_rent',
+            'can_list_items',
             'is_staff',
             'is_superuser',
             'overall_rating',
@@ -57,11 +65,11 @@ class LoginSerializer(serializers.Serializer):
                 user = User.objects.get(email=email)
                 user_auth = authenticate(username=user.username, password=password)
                 if not user_auth:
-                    raise serializers.ValidationError('Invalid email or password.')
+                    raise serializers.ValidationError({'non_field_errors': ['Invalid email or password.']})
+                data['user'] = user_auth
             except User.DoesNotExist:
-                raise serializers.ValidationError('Invalid email or password.')
+                raise serializers.ValidationError({'non_field_errors': ['Invalid email or password.']})
         else:
-            raise serializers.ValidationError('Must include "email" and "password".')
+            raise serializers.ValidationError({'non_field_errors': ['Must include "email" and "password".']})
 
-        data['user'] = user
         return data

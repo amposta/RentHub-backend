@@ -14,9 +14,22 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class SimpleUserSerializer(serializers.ModelSerializer):
+    can_rent = serializers.ReadOnlyField()
+    can_list_items = serializers.ReadOnlyField()
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'avatar', 'is_verified']
+        fields = [
+            'id',
+            'username',
+            'email',
+            'avatar',
+            'is_verified',
+            'is_identity_verified',
+            'is_payout_connected',
+            'can_rent',
+            'can_list_items',
+        ]
 
 
 class RentalItemSerializer(serializers.ModelSerializer):
@@ -33,6 +46,8 @@ class RentalItemSerializer(serializers.ModelSerializer):
             'slug',
             'description',
             'price_per_day',
+            'security_deposit',
+            'dynamic_attributes',
             'location',
             'city',
             'state',
@@ -57,6 +72,9 @@ class RentalItemSerializer(serializers.ModelSerializer):
 
 
 class AdminUserSerializer(serializers.ModelSerializer):
+    can_rent = serializers.ReadOnlyField()
+    can_list_items = serializers.ReadOnlyField()
+
     class Meta:
         model = User
         fields = [
@@ -67,6 +85,11 @@ class AdminUserSerializer(serializers.ModelSerializer):
             'last_name',
             'avatar',
             'is_verified',
+            'is_identity_verified',
+            'is_payout_connected',
+            'stripe_account_id',
+            'can_rent',
+            'can_list_items',
             'is_staff',
             'is_superuser',
             'date_joined',
@@ -112,6 +135,8 @@ class AdminRentalItemSerializer(serializers.ModelSerializer):
             'slug',
             'description',
             'price_per_day',
+            'security_deposit',
+            'dynamic_attributes',
             'location',
             'city',
             'state',

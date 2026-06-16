@@ -1,6 +1,10 @@
+import uuid
+from datetime import timedelta
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
@@ -10,6 +14,9 @@ class CustomUser(AbstractUser):
     phone = models.CharField(max_length=20, blank=True, null=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
     is_verified = models.BooleanField(default=False)
+    is_identity_verified = models.BooleanField(default=False)
+    is_payout_connected = models.BooleanField(default=False)
+    stripe_account_id = models.CharField(max_length=255, blank=True, null=True)
     bio = models.TextField(max_length=500, blank=True)
     location = models.CharField(max_length=255, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -31,6 +38,22 @@ class CustomUser(AbstractUser):
     
     def __str__(self):
         return self.email
+
+    @property
+    def is_kyc_verified(self):
+        return self.is_identity_verified or (getattr(self, 'profile', None) and self.profile.id_verified)
+
+    @property
+    def is_email_verified(self):
+        return self.is_verified or (getattr(self, 'profile', None) and self.profile.email_verified)
+
+    @property
+    def can_rent(self):
+        return self.is_email_verified and self.is_identity_verified
+
+    @property
+    def can_list_items(self):
+        return self.is_email_verified and self.is_identity_verified and self.is_payout_connected
 
 
 class UserProfile(models.Model):
@@ -107,3 +130,25 @@ class VerificationRequest(models.Model):
     
     def __str__(self):
         return f"{self.user.email} - {self.status}"
+
+
+class EmailVerificationToken(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='email_verification_tokens')
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    used = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def save(self, *args, **kwargs):
+        if not self.expires_at:
+            self.expires_at = timezone.now() + timedelta(days=2)
+        super().save(*args, **kwargs)
+
+    def is_expired(self):
+        return timezone.now() > self.expires_at
+
+    def __str__(self):
+        return f"Email verification token for {self.user.email}"

@@ -54,6 +54,13 @@ class RentalItem(models.Model):
         decimal_places=2,
         validators=[MinValueValidator(0.01)]
     )
+    security_deposit = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0.00,
+        validators=[MinValueValidator(0)]
+    )
+    dynamic_attributes = models.JSONField(default=dict, blank=True)
     
     # Images (up to 5)
     image1 = models.ImageField(upload_to='rental_items/')

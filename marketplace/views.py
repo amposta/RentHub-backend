@@ -119,6 +119,10 @@ def listing_detail(request, item_id):
         if not request.user.is_authenticated:
             return redirect('accounts:login')
 
+        if not request.user.can_rent:
+            messages.error(request, 'You must complete identity verification before renting an item.')
+            return redirect('accounts:verification')
+
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
         special_requests = request.POST.get('special_requests', '').strip()
@@ -206,9 +210,15 @@ class RentalItemCreateView(LoginRequiredMixin, CreateView):
     redirect_field_name = 'next'
     model = RentalItem
     template_name = 'marketplace/item_form.html'
-    fields = ['category', 'title', 'description', 'price_per_day', 'location', 'city', 'state', 
+    fields = ['category', 'title', 'description', 'price_per_day', 'security_deposit', 'dynamic_attributes', 'location', 'city', 'state', 
               'condition', 'image1', 'image2', 'image3', 'image4', 'image5']
     
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.can_list_items:
+            messages.error(request, 'You must complete identity verification and payout onboarding before listing an item.')
+            return redirect('accounts:owner_onboarding')
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         form.instance.owner = self.request.user
         messages.success(self.request, 'Item listed successfully!')

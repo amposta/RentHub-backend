@@ -6,14 +6,34 @@ from .models import CustomUser, UserProfile, VerificationRequest
 @admin.register(CustomUser)
 class CustomUserAdmin(BaseUserAdmin):
     readonly_fields = ('last_login', 'date_joined', 'updated_at')
-    list_display = ('email', 'first_name', 'last_name', 'is_verified', 'overall_rating', 'date_joined')
-    list_filter = ('is_verified', 'is_staff', 'date_joined')
+    list_display = (
+        'email',
+        'first_name',
+        'last_name',
+        'is_identity_verified',
+        'is_payout_connected',
+        'is_verified',
+        'overall_rating',
+        'date_joined',
+    )
+    list_filter = ('is_identity_verified', 'is_payout_connected', 'is_verified', 'is_staff', 'date_joined')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('-date_joined',)
     
     fieldsets = BaseUserAdmin.fieldsets + (
         ('Additional Info', {
-            'fields': ('phone', 'avatar', 'is_verified', 'bio', 'location', 'overall_rating', 'total_reviews')
+            'fields': (
+                'phone',
+                'avatar',
+                'is_verified',
+                'is_identity_verified',
+                'is_payout_connected',
+                'stripe_account_id',
+                'bio',
+                'location',
+                'overall_rating',
+                'total_reviews',
+            )
         }),
     )
 
@@ -40,6 +60,13 @@ class VerificationRequestAdmin(admin.ModelAdmin):
             obj.reviewed_by = request.user
             obj.reviewed_at = timezone.now()
             obj.save()
+            if hasattr(obj.user, 'profile'):
+                obj.user.profile.id_verified = True
+                obj.user.profile.identity_verified = True
+                obj.user.profile.save()
+            obj.user.is_identity_verified = True
+            obj.user.is_verified = True
+            obj.user.save()
         self.message_user(request, "Verification approved!")
     approve_verification.short_description = "Approve selected verifications"
     
@@ -49,6 +76,13 @@ class VerificationRequestAdmin(admin.ModelAdmin):
             obj.reviewed_by = request.user
             obj.reviewed_at = timezone.now()
             obj.save()
+            if hasattr(obj.user, 'profile'):
+                obj.user.profile.id_verified = False
+                obj.user.profile.identity_verified = False
+                obj.user.profile.save()
+            obj.user.is_identity_verified = False
+            obj.user.is_verified = False
+            obj.user.save()
         self.message_user(request, "Verification rejected!")
     reject_verification.short_description = "Reject selected verifications"
 
